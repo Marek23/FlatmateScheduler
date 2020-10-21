@@ -9,6 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
+
 import pl.com.flat.model.permissions.StlType;
 
 @Data @Entity
