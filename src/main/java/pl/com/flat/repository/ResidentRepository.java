@@ -4,4 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import pl.com.flat.model.Resident;
 
-public interface ResidentRepository extends CrudRepository<Resident, Long> {}
+public interface ResidentRepository extends CrudRepository<Resident, Long> {
+	public Resident findByEmail(String email);
+}
