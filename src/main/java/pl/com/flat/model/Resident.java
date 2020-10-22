@@ -2,7 +2,6 @@ package pl.com.flat.model;
 
 import java.util.Collection;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
@@ -16,7 +15,7 @@ import lombok.Data;
 
 import pl.com.flat.model.permissions.Role;
 
-@Data @Entity @Embeddable
+@Data @Entity
 public class Resident {
 	public Resident() {}
 	public Resident(String email, String password) {
