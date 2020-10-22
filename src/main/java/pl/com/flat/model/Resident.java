@@ -4,6 +4,7 @@ import java.util.Collection;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
@@ -29,7 +30,7 @@ public class Resident {
 	private String email;
 	private String password;
 
-	@ManyToMany @JoinTable(
+	@ManyToMany(fetch = FetchType.EAGER) @JoinTable(
 	name = "residents_roles", 
 	joinColumns = @JoinColumn(
 		name = "resident_id", referencedColumnName = "id"), 
@@ -40,4 +41,8 @@ public class Resident {
 
 	@OneToMany(mappedBy="resident")
 	private Collection<Settlement> settlements;
+
+	public void addRole(Role r) {
+		roles.add(r);
+	}
 }

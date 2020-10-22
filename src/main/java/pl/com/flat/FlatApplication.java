@@ -58,6 +58,10 @@ public class FlatApplication {
 			s.setResident(u);
 			sr.save(s);
 
+			var update = ur.findByEmail("email");
+			update.addRole(webRole);
+			ur.save(update);
+
 			System.out.println("STOP");
 		};
 	};

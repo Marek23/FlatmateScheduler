@@ -7,3 +7,4 @@ import pl.com.flat.model.Resident;
 public interface ResidentRepository extends CrudRepository<Resident, Long> {
 	public Resident findByEmail(String email);
 }
+
