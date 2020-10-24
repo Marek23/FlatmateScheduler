@@ -14,7 +14,7 @@ public class RolesApi {
 	IFacade facade;
 
 	@GetMapping("/roles")
-	public Collection roles() {
+	public Collection<?> roles() {
 		return facade.getAuthentication().getAuthorities();
 	}
 }

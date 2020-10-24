@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{../css/bootstrap.min.css}"/>
+    <link href="../css/task/task.css"     rel="stylesheet" media="screen" th:href="@{../css/task/task.css}" />
+</head>
+<body>
+    <!--/*  Multiple fragments may be defined in one file */-->
+    <div th:fragment="settlements" th:align="center">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>ID</td>
+                <td>Kto</td>
+                <td>Ile</td>
+                <td>Kiedy</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${settlements.empty}">
+                <td colspan="4">Brak rozliczeń</td>
+            </tr>
+            <tr th:each="stl : ${settlements}">
+                <td th:text="${stl.id}"></td>
+                <td th:text="${stl.resident.email}"></td>
+                <td th:text="${stl.amount}"></td>
+                <td th:text="${stl.date}"></td>
+            </tr>
+            </tbody>
+        </table>
+        <div sec:authorize="hasRole('ROLE_ROOMOWNER_')">
+           Dodaj
+          </div>
+    </div>
+</body>
+</html>
+
