@@ -29,8 +29,20 @@
             </tbody>
         </table>
         <div sec:authorize="hasRole('ROLE_ROOMOWNER_')">
-           Dodaj
-          </div>
+            Dodaj wydatek
+            <form action="#" th:action="@{add}" th:object="${stl}" method="post">
+                <p>Data  wydatku: <input type="text"   th:field="${stl.date}" /></p>
+                <p>Kwota wydatku: <input type="number" th:field="${stl.amount}" /></p>
+                <p>
+                    Typ wydatku
+                    <select  th:field="${typeId.value}" >
+                        <option th:each="type : ${stlTypes}" th:value="${type.id}" th:utext="${type.name}"/>
+                    </select>
+                </p>
+
+                <p><input type="submit" value="Zapisz" /> <input type="reset" value="Wyczyść" /></p>
+            </form>
+        </div>
     </div>
 </body>
 </html>
