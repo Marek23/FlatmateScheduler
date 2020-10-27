@@ -5,6 +5,9 @@
     <link href="../css/core.css" rel="stylesheet" media="screen" th:href="@{../css/core.css}"/>
     <title th:text="#{view.index.title}">Home</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+    <script src="../js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
 
@@ -13,6 +16,10 @@
 <div class="fragments/content :: settlements">
     Główna
 </div>
+
+<button onclick="getRoles()">Pobierz role</button>
+
+<div class="roles"></div>
 
 <div class="container">
     <div th:replace="fragments/footer :: footer">&nbsp;</div>
