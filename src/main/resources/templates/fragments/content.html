@@ -13,6 +13,7 @@
                 <td>ID</td>
                 <td>Kto</td>
                 <td>Ile</td>
+                <td>Co</td>
                 <td>Kiedy</td>
             </tr>
             </thead>
@@ -24,6 +25,7 @@
                 <td th:text="${stl.id}"></td>
                 <td th:text="${stl.resident.email}"></td>
                 <td th:text="${stl.amount}"></td>
+                <td th:text="${stl.type.name}"></td>
                 <td th:text="${stl.date}"></td>
             </tr>
             </tbody>
