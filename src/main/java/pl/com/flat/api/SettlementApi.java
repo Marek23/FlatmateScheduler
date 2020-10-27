@@ -23,12 +23,12 @@ public class SettlementApi {
 	SettlementRepository stlRep;
 
 	@Autowired
-	StlTypeRepository typRep;
+	StlTypeRepository stlTypeRep;
 
 	@RequestMapping("/all")
 	public String settlements(Model model) {
 		model.addAttribute("settlements", stlRep.findAll());
-		model.addAttribute("stlTypes",    typRep.findAll());
+		model.addAttribute("stlTypes",    stlTypeRep.findAll());
 
 		model.addAttribute("stl",    new Settlement());
 		model.addAttribute("typeId", new Text());
@@ -42,7 +42,7 @@ public class SettlementApi {
 		@ModelAttribute("type") Text typeId)
 	{
 		var id   = Long.parseLong(typeId.getValue());
-		var type = typRep.findById(id).get();
+		var type = stlTypeRep.findById(id).get();
 
 		stl.setType(type);
 		stl.setResident(facade.currentResident());

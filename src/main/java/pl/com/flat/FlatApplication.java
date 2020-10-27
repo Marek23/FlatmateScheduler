@@ -11,6 +11,7 @@ import pl.com.flat.model.Resident;
 import pl.com.flat.model.Settlement;
 import pl.com.flat.model.permissions.Role;
 import pl.com.flat.model.permissions.StlType;
+import pl.com.flat.model.permissions.TaskType;
 import pl.com.flat.repository.*;
 
 @SpringBootApplication
@@ -21,46 +22,68 @@ public class FlatApplication {
 
 	@Bean
 	ApplicationRunner init(
-			ResidentRepository ur,
-			RoleRepository rr,
-			StlTypeRepository tr,
+			ResidentRepository   ur,
+			RoleRepository       rr,
+			StlTypeRepository    str,
+			TaskTypeRepository   ttr,
 			SettlementRepository sr) {
 		return args -> {
 			System.out.println("START");
 
-			var u = new Resident("email", "password");
-			ur.save(u);
+			var um = new Resident("marek", "password");
+			var ua = new Resident("adam",  "password");
+			var uk = new Resident("kamil", "password");
+
+			ur.save(um);
+			ur.save(ua);
+			ur.save(uk);
 
 			var webRole  = new Role("WEBADM____");
 			var roomRole = new Role("ROOMOWNER_");
 			rr.save(roomRole);
 			rr.save(webRole);
 
-			var t1 = new StlType("WEBBILL___", "Opłata miesięczna za internet");
-			var t2 = new StlType("RUBBISH___", "Wynoszenie śmieci");
-			var t3 = new StlType("CLEANBATHR", "Sprzątanie łazienki");
-			var t4 = new StlType("CLEANKITCH", "Sprzątanie kuchni");
+			var st1 = new StlType("WEBBILL___", "Opłata miesięczna za internet");
+			var st2 = new StlType("SHOPPING__", "Zakupy");
 
-			t1.setRole(webRole);
-			t2.setRole(roomRole);
-			t3.setRole(roomRole);
-			t4.setRole(roomRole);
+			var tt1 = new TaskType("RUBBISH___", "Wynoszenie śmieci");
+			var tt2 = new TaskType("CLEANBATHR", "Sprzątanie łazienki");
+			var tt3 = new TaskType("CLEANKITCH", "Sprzątanie kuchni");
 
-			tr.save(t1);
-			tr.save(t2);
-			tr.save(t3);
-			tr.save(t4);
+			st1.setRole(webRole);
+
+			st2.setRole(roomRole);
+			tt1.setRole(roomRole);
+			tt2.setRole(roomRole);
+			tt3.setRole(roomRole);
+
+			str.save(st1);
+			str.save(st2);
+
+			ttr.save(tt1);
+			ttr.save(tt2);
+			ttr.save(tt3);
 
 			var s = new Settlement();
 			s.setAmount(new BigDecimal(3f));
 			s.setDate("20200101");
-			s.setType(t1);
-			s.setResident(u);
+			s.setType(st1);
+			s.setResident(um);
 			sr.save(s);
 
-			var update = ur.findByEmail("email");
-			update.addRole(webRole);
-			ur.save(update);
+			var updatem = ur.findByEmail("marek");
+			var updatea = ur.findByEmail("adam");
+			var updatek = ur.findByEmail("kamil");
+
+			updatem.addRole(roomRole);
+			updatea.addRole(roomRole);
+
+			updatek.addRole(roomRole);
+			updatek.addRole(webRole);
+
+			ur.save(updatem);
+			ur.save(updatea);
+			ur.save(updatek);
 
 			System.out.println("STOP");
 		};
