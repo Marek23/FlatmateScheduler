@@ -20,6 +20,9 @@
                 <li th:classappend="${module == 'tasks' ? 'active' : ''}">
                     <a href="#" th:href="@{/settlements/all}">Rozliczenia</a>
                 </li>
+                <li th:classappend="${module == 'tasks' ? 'active' : ''}">
+                    <a href="#" th:href="@{/payments/all}">Moje opłaty</a>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 <li sec:authorize="!isAuthenticated()">

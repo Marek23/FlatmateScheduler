@@ -46,6 +46,78 @@
             </form>
         </div>
     </div>
+
+    <div th:fragment="settled" th:align="center">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>ID</td>
+                <td>Kto</td>
+                <td>Ile</td>
+                <td>Co</td>
+                <td>Kiedy</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${settled.empty}">
+                <td colspan="4">Brak rozliczonych</td>
+            </tr>
+            <tr th:each="stl : ${settled}">
+                <td th:text="${stl.id}"></td>
+                <td th:text="${stl.resident.email}"></td>
+                <td th:text="${stl.amount}"></td>
+                <td th:text="${stl.type.name}"></td>
+                <td th:text="${stl.date}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="payments" th:align="center">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>Numer wydatku</td>
+                <td>Kwota</td>
+                <td>Status</td>
+                <td>Dzień opłaty</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${payments.empty}">
+                <td colspan="4">Brak opłaconych wydatków</td>
+            </tr>
+            <tr th:each="p : ${payments}">
+                <td th:text="${p.id.settlementId}"></td>
+                <td th:text="${p.amount}"></td>
+                <td th:text="${p.status}"></td>
+                <td th:text="${p.date}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="to-pay" th:align="center">
+        <table class="table table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>Numer wydatku</td>
+                <td>Kwota</td>
+                <td>Status</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${toPay.empty}">
+                <td colspan="4">Brak opłaconych wydatków</td>
+            </tr>
+            <tr th:each="p : ${toPay}">
+                <td th:text="${p.id.settlementId}"></td>
+                <td th:text="${p.amount}"></td>
+                <td th:text="${p.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 </body>
 </html>
 
