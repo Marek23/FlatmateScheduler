@@ -1,5 +1,7 @@
 package pl.com.flat.api;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.com.flat.model.Settlement;
+import pl.com.flat.model.permissions.StlType;
+
+import pl.com.flat.repository.ResidentRepository;
 import pl.com.flat.repository.SettlementRepository;
 import pl.com.flat.repository.StlTypeRepository;
 import pl.com.flat.security.IFacade;
@@ -20,6 +25,9 @@ public class SettlementApi {
 	IFacade facade;
 
 	@Autowired
+	ResidentRepository resRep;
+
+	@Autowired
 	SettlementRepository stlRep;
 
 	@Autowired
@@ -27,9 +35,15 @@ public class SettlementApi {
 
 	@RequestMapping("/all")
 	public String settlements(Model model) {
-		model.addAttribute("settlements", stlRep.findAll());
-		model.addAttribute("stlTypes",    stlTypeRep.findAll());
+		var allowed = new ArrayList<StlType>();
 
+		facade.currentResident().getRoles().forEach((r)-> {
+			allowed.addAll(r.getStltypes());
+		});
+
+		model.addAttribute("stlTypes", allowed);
+
+		model.addAttribute("settlements", stlRep.findAll());
 		model.addAttribute("stl",    new Settlement());
 		model.addAttribute("typeId", new Text());
 
