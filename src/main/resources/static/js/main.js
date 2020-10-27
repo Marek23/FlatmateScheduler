@@ -10,3 +10,4 @@ function getRoles() {
         $(".roles")[0].innerHTML = "<b>Role: </b>" + resp;
     }
 }
+
