@@ -14,4 +14,7 @@ public interface PaymentRepository extends CrudRepository<Payment, Long> {
 
 	@Query("SELECT p FROM Payment p WHERE p.id.residentId = ?1 and status= ?2")
 	public List<Payment> findPaidByResidentIdAndStatus(Long r, Status s);
+
+	@Query("SELECT p FROM Payment p WHERE p.id.settlementId = ?1")
+	public List<Payment> findPaidsForSettlement(Long id);
 }

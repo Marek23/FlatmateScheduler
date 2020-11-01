@@ -1,10 +1,16 @@
 package pl.com.flat.api;
 
+import java.util.Collection;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import pl.com.flat.model.Payment;
 import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
@@ -46,5 +52,14 @@ public class PaymentApi {
 
 		model.addAttribute("toPay", toPay);
 		return "home/to-pay";
+	}
+
+	@ResponseBody
+	@GetMapping(
+		value    ="/settlement/{id}",
+		produces = "application/json; charset=UTF-8"
+	)
+	public Collection<Payment> paysPerStl(@PathVariable("id") Long id) {
+		return payRep.findPaidsForSettlement(id);
 	}
 }
