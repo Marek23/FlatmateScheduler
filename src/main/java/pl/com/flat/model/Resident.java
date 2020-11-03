@@ -17,6 +17,7 @@ import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import pl.com.flat.model.permissions.Role;
 
@@ -54,5 +55,9 @@ public class Resident {
 	@JsonManagedReference
 	public Collection<Settlement> getSettlements() {
 		return settlements;
+	}
+
+	@JsonIgnore public String getPassword() {
+		return password;
 	}
 }
