@@ -28,6 +28,7 @@ public class Payment {
 		this.id     = new PaymentId(r.getId(), s.getId());
 		this.amount = amount;
 		this.status = Status.Nierozliczona;
+		this.date   = "";
 
 		this.resident   = r;
 		this.settlement = s;
