@@ -27,19 +27,19 @@ public class Payment {
 	public Payment(Resident r, Settlement s, BigDecimal amount) {
 		this.id     = new PaymentId(r.getId(), s.getId());
 		this.amount = amount;
-		this.status = Status.NEW;
+		this.status = Status.Nierozliczona;
 
 		this.resident   = r;
 		this.settlement = s;
 	}
 
 	public void setPayed(String date) {
-		this.status = Status.PAYED;
+		this.status = Status.Opłacona;
 		this.date   = date;
 	}
 
 	public void setConfirmed(String date) {
-		this.status = Status.CONFIRMED;
+		this.status = Status.Potwierdzona;
 		this.date   = date;
 	}
 }

@@ -45,7 +45,7 @@ public class PaymentApi {
 	public String toPay(Model model) {
 		var current = facade.currentResident().getId();
 
-		var toPay = payRep.findPaidByResidentIdAndStatus(current, Status.NEW);
+		var toPay = payRep.findPaidByResidentIdAndStatus(current, Status.Nierozliczona);
 		toPay.forEach(p -> {
 			p.setResident(resRep.findById(p.getId().getResidentId()).get());
 		});
