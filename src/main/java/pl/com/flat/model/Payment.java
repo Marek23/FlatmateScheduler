@@ -33,10 +33,6 @@ public class Payment {
 		this.settlement = s;
 	}
 
-	public void createId(Resident r, Settlement s) {
-		this.id = new PaymentId(r.getId(), s.getId());
-	}
-
 	public void setPayed(String date) {
 		this.status = Status.PAYED;
 		this.date   = date;
