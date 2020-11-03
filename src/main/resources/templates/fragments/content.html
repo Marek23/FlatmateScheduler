@@ -15,18 +15,27 @@
                 <td>Ile</td>
                 <td>Co</td>
                 <td>Kiedy</td>
+
+                <td>Pokaż opłaty </td>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${settlements.empty}">
                 <td colspan="4">Brak rozliczeń</td>
             </tr>
-            <tr th:each="stl : ${settlements}">
+            <tr th:each="stl : ${settlements}" th:id="@{tr-} + ${stl.id}">
                 <td th:text="${stl.id}"></td>
                 <td th:text="${stl.resident.email}"></td>
                 <td th:text="${stl.amount}"></td>
                 <td th:text="${stl.type.name}"></td>
                 <td th:text="${stl.date}"></td>
+
+                <td th:id="@{td-} + ${stl.id}">
+                    <span
+                        class="glyphicon glyphicon-chevron-down"
+                        onclick="showPayments(this)" th:id="${stl.id}">
+                    </span>
+                </td>
             </tr>
             </tbody>
         </table>
