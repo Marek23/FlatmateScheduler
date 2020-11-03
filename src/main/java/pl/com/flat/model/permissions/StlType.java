@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import pl.com.flat.model.Settlement;
 
 @Data @Entity
@@ -32,4 +35,14 @@ public class StlType {
 
 	@OneToMany(mappedBy="type")
 	private Collection<Settlement> settlements;
+
+	@JsonManagedReference
+	public Collection<Settlement> getSettlements() {
+		return settlements;
+	}
+
+	@JsonBackReference
+	public Role getRole() {
+		return role;
+	}
 }

@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import pl.com.flat.model.permissions.TaskType;
 
 @Data @Entity
@@ -22,4 +24,14 @@ public class Task {
 
 	@ManyToOne @JoinColumn(name="resident_id")
 	private Resident resident;
+
+	@JsonBackReference
+	public TaskType getType() {
+		return type;
+	}
+
+	@JsonBackReference
+	public Resident getResident() {
+		return resident;
+	}
 }

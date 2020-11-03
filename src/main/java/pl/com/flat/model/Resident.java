@@ -11,10 +11,16 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.JoinColumn;
+
 import lombok.Data;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
 import pl.com.flat.model.permissions.Role;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data @Entity
 public class Resident {
 	public Resident() {}
@@ -43,5 +49,10 @@ public class Resident {
 
 	public void addRole(Role r) {
 		roles.add(r);
+	}
+
+	@JsonManagedReference
+	public Collection<Settlement> getSettlements() {
+		return settlements;
 	}
 }

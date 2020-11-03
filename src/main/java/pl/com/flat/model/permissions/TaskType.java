@@ -11,6 +11,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import pl.com.flat.model.Task;
 
 @Data @Entity
@@ -32,4 +35,14 @@ public class TaskType {
 
 	@OneToMany(mappedBy="type")
 	private Collection<Task> tasks;
+
+	@JsonManagedReference
+	public Collection<Task> getSettlements() {
+		return tasks;
+	}
+
+	@JsonBackReference
+	public Role getRole() {
+		return role;
+	}
 }

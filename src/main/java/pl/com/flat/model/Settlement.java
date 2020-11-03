@@ -12,6 +12,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import pl.com.flat.model.permissions.StlType;
 
 @Data @Entity
@@ -29,4 +31,14 @@ public class Settlement {
 	private Resident resident;
 
 	@Transient List<Payment> payments;
+
+	@JsonBackReference
+	public Resident getResident() {
+		return resident;
+	}
+
+	@JsonBackReference
+	public StlType getType() {
+		return type;
+	}
 }

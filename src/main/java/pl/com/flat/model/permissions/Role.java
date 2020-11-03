@@ -10,9 +10,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 
 import pl.com.flat.model.Resident;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data @Entity
 public class Role {
 	public Role() {}
@@ -30,4 +34,9 @@ public class Role {
 
 	@OneToMany(mappedBy="role")
 	private Collection<StlType> stltypes;
+
+	@JsonManagedReference
+	public Collection<StlType> getStltypes() {
+		return stltypes;
+	}
 }

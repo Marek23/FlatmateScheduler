@@ -60,6 +60,10 @@ public class PaymentApi {
 		produces = "application/json; charset=UTF-8"
 	)
 	public Collection<Payment> paysPerStl(@PathVariable("id") Long id) {
-		return payRep.findPaidsForSettlement(id);
+		var payments = payRep.findPaidsForSettlement(id);
+		payments.forEach(p -> {
+			p.setResident(resRep.findById(p.getId().getResidentId()).get());
+		});
+		return payments;
 	}
 }
