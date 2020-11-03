@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.com.flat.model.Payment;
+import pl.com.flat.model.PaymentId;
 import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
@@ -65,5 +66,26 @@ public class PaymentApi {
 			p.setResident(resRep.findById(p.getId().getResidentId()).get());
 		});
 		return payments;
+	}
+
+	@ResponseBody
+	@GetMapping(
+		value    ="/pay/{id}",
+		produces = "application/json; charset=UTF-8"
+	)
+	public Payment pay(@PathVariable("id") Long id) {
+		PaymentId complexId = new PaymentId(
+			facade.currentResident().getId(),
+			id
+		);
+
+		var payment = payRep.findById(complexId);
+		if (payment != null)
+		{
+			payment.setPayed("tmp-today");
+			payRep.save(payment);
+		}
+
+		return payment;
 	}
 }

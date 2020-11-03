@@ -78,3 +78,31 @@ function hidePayments(span) {
 
     $("tr#"+ "payments-" + id).remove();
 }
+
+function pay(span) {
+    var id = $(span).attr("id");
+
+    var req = new XMLHttpRequest();
+
+    req.responseType = 'json';
+    req.open("GET", "/payments/pay/" + id);
+    req.send();
+
+    req.onreadystatechange = (e) => {
+        if (req.readyState == 4 && req.status == 200)
+        {
+            var p    = req.response;
+            var trId = p.id.residentId + "-" + p.id.settlementId;
+
+            $("tr#" + trId).replaceWith(
+                "<tr id=" + trId + ">" +
+                "<td>" + p.id.settlementId + "</td>" +
+                "<td>" + p.amount + "</td>" +
+                "<td>" + p.status + "</td>" +
+                "<td>" + p.date   + "</td>" +
+                "<td></td>" +
+                "</tr>"
+            );
+        }
+    }
+}

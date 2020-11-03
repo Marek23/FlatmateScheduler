@@ -90,17 +90,25 @@
                 <td>Kwota</td>
                 <td>Status</td>
                 <td>Dzień opłaty</td>
+                <td>Akcja</td>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${payments.empty}">
                 <td colspan="4">Brak opłaconych wydatków</td>
             </tr>
-            <tr th:each="p : ${payments}">
+            <tr th:each="p : ${payments}" th:id="${p.id.residentId} + '-' + ${p.id.settlementId}">
                 <td th:text="${p.id.settlementId}"></td>
                 <td th:text="${p.amount}"></td>
                 <td th:text="${p.status}"></td>
                 <td th:text="${p.date}"></td>
+                <td th:switch="${p.status.name()}">
+                    <span th:case="Nierozliczona"
+                        class="glyphicon glyphicon glyphicon-ok"
+                        onclick="pay(this)" th:id="${p.id.settlementId}">
+                    </span>
+                    <span th:case="*"></span>
+                </td>
             </tr>
             </tbody>
         </table>
