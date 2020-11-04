@@ -70,13 +70,13 @@ public class PaymentApi {
 
 	@ResponseBody
 	@GetMapping(
-		value    ="/pay/{id}",
+		value    ="/pay/{resId}/{stlId}",
 		produces = "application/json; charset=UTF-8"
 	)
-	public Payment pay(@PathVariable("id") Long id) {
+	public Payment pay(@PathVariable("resId") Long resId, @PathVariable("stlId") Long stlId) {
 		PaymentId complexId = new PaymentId(
-			facade.currentResident().getId(),
-			id
+			resId,
+			stlId
 		);
 
 		var payment = payRep.findById(complexId);
