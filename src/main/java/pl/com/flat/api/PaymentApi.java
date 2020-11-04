@@ -1,6 +1,7 @@
 package pl.com.flat.api;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,8 @@ import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
 import pl.com.flat.security.IFacade;
+
+import static org.apache.commons.lang3.time.DateFormatUtils.format;
 
 @Controller
 @RequestMapping("payments")
@@ -82,7 +85,9 @@ public class PaymentApi {
 		var payment = payRep.findById(complexId);
 		if (payment != null)
 		{
-			payment.setPayed("tmp-today");
+			payment.setPayed(
+				format(new Date(), "yyyy-MM-dd")
+			);
 			payRep.save(payment);
 		}
 

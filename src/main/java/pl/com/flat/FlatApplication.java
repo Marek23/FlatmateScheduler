@@ -1,6 +1,7 @@
 package pl.com.flat;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
@@ -14,6 +15,8 @@ import pl.com.flat.model.permissions.Role;
 import pl.com.flat.model.permissions.StlType;
 import pl.com.flat.model.permissions.TaskType;
 import pl.com.flat.repository.*;
+
+import static org.apache.commons.lang3.time.DateFormatUtils.format;
 
 @SpringBootApplication
 public class FlatApplication {
@@ -68,7 +71,7 @@ public class FlatApplication {
 
 			var s = new Settlement();
 			s.setAmount(new BigDecimal(3f));
-			s.setDate("20200101");
+			s.setDate(format(new Date(), "yyyy-MM-dd"));
 			s.setType(st1);
 			s.setResident(um);
 			sr.save(s);
