@@ -15,12 +15,14 @@ var addPayments = function (response, id) {
     var $td  = $('<td/>');
     $td.attr('colspan',6);
     $row.attr('id', 'payments-' + id);
+    $row.addClass(".bg-info");
 
     var $table = $('<table/>');
     var $thead = $('<thead/>');
-    var $tr    = $('<td>Kto</td><td>Ile</td><td>Kiedy</td><td>Status</td>');
+    var $tr    = $('<th>Kto</th><th>Ile</th><th>Kiedy</th><th>Status</th>');
 
-    $table.addClass("table table-bordered table-striped");
+    $table.addClass("table table-sm table-bordered");
+    $thead.addClass("thead-light")
 
     $thead.append($tr);
     $table.append($thead);

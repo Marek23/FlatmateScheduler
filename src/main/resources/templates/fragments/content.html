@@ -3,16 +3,15 @@
 <head></head>
 <body>
     <div th:fragment="settlements" th:align="center">
-        <table class="table table-bordered table-striped">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
             <tr>
-                <td>ID</td>
-                <td>Kto</td>
-                <td>Ile</td>
-                <td>Co</td>
-                <td>Kiedy</td>
-
-                <td>Pokaż opłaty </td>
+                <th scope="col">#</th>
+                <th scope="col">Kto stworzył</th>
+                <th scope="col">Ile</th>
+                <th scope="col">Co</th>
+                <th scope="col">Kiedy</th>
+                <th scope="col">Pokaż opłaty </th>
             </tr>
             </thead>
             <tbody>
@@ -20,7 +19,7 @@
                 <td colspan="4">Brak rozliczeń</td>
             </tr>
             <tr th:each="stl : ${settlements}" th:id="@{tr-} + ${stl.id}">
-                <td th:text="${stl.id}"></td>
+                <th scope="row" th:text="${stl.id}"></th>
                 <td th:text="${stl.resident.email}"></td>
                 <td th:text="${stl.amount}"></td>
                 <td th:text="${stl.type.name}"></td>
@@ -34,32 +33,17 @@
             </tr>
             </tbody>
         </table>
-        <div sec:authorize="hasRole('ROLE_ROOMOWNER_')">
-            Dodaj wydatek
-            <form action="#" th:action="@{add}" th:object="${stl}" method="post">
-                <p>Data  wydatku: <input type="text"   th:field="${stl.date}" /></p>
-                <p>Kwota wydatku: <input type="number" th:field="${stl.amount}" /></p>
-                <p>
-                    Typ wydatku
-                    <select  th:field="${typeId.value}" >
-                        <option th:each="type : ${stlTypes}" th:value="${type.id}" th:utext="${type.name}"/>
-                    </select>
-                </p>
-
-                <p><input type="submit" value="Zapisz" /> <input type="reset" value="Wyczyść" /></p>
-            </form>
-        </div>
     </div>
 
     <div th:fragment="settled" th:align="center">
-        <table class="table table-bordered table-striped">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
             <tr>
-                <td>ID</td>
-                <td>Kto</td>
-                <td>Ile</td>
-                <td>Co</td>
-                <td>Kiedy</td>
+                <th>ID</th>
+                <th>Kto</th>
+                <th>Ile</th>
+                <th>Co</th>
+                <th>Kiedy</th>
             </tr>
             </thead>
             <tbody>
@@ -78,13 +62,13 @@
     </div>
 
     <div th:fragment="payments" th:align="center">
-        <table class="table table-bordered table-striped">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
             <tr>
-                <td>Numer wydatku</td>
-                <td>Kwota</td>
-                <td>Status</td>
-                <td>Dzień opłaty</td>
+                <th>Numer wydatku</th>
+                <th>Kwota</th>
+                <th>Status</th>
+                <th>Dzień opłaty</th>
             </tr>
             </thead>
             <tbody>
@@ -102,13 +86,13 @@
     </div>
 
     <div th:fragment="to-pay" th:align="center">
-        <table class="table table-bordered table-striped">
-            <thead>
+        <table class="table table-hover table-bordered">
+            <thead class="thead-light">
             <tr>
-                <td>Numer wydatku</td>
-                <td>Kwota</td>
-                <td>Status</td>
-                <td></td>
+                <th>Numer wydatku</th>
+                <th>Kwota</th>
+                <th>Status</th>
+                <th></th>
             </tr>
             </thead>
             <tbody>
@@ -132,6 +116,42 @@
             </tr>
             </tbody>
         </table>
+    </div>
+
+    
+    <div th:fragment="add-settlement">
+        <form class="needs-validation" action="#" th:action="@{add}" th:object="${stl}" method="post">
+            <div class="form-row">
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom01">Typ rozliczenia</label>
+                <select class="custom-select"
+                    id="validationCustom01" required
+                    th:field="${typeId.value}"
+                >
+                  <option selected disabled value="">Wybierz...</option>
+                  <option th:each="type : ${stlTypes}" th:value="${type.id}" th:utext="${type.name}"/>
+                </select>
+                <div class="invalid-feedback">
+                  Wybierz typ rozliczenia
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom02">Data powstania rozliczenia</label>
+                <input th:field="${stl.date}" type="date" class="form-control" id="validationCustom02" required>
+                <div class="invalid-feedback">
+                  Wprowadź datę
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom03">Cała kwota rozliczenia</label>
+                <input th:field="${stl.amount}" type="number" class="form-control" min="0.00" max="1000.00" step="0.01" required/>
+                <div class="invalid-feedback">
+                  Wprowadź kwotę
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </form>
     </div>
 </body>
 </html>
