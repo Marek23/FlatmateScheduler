@@ -1,13 +1,13 @@
 package pl.com.flat.api;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.com.flat.model.Payment;
@@ -40,17 +40,7 @@ public class SettlementApi {
 
 	@RequestMapping("/all")
 	public String all(Model model) {
-		var allowed = new ArrayList<StlType>();
-
-		facade.currentResident().getRoles().forEach((r)-> {
-			allowed.addAll(r.getStltypes());
-		});
-
-		model.addAttribute("stlTypes", allowed);
-
 		model.addAttribute("settlements", stlRep.findAll());
-		model.addAttribute("stl",    new Settlement());
-		model.addAttribute("typeId", new Text());
 
 		return "home/all-settlements";
 	}
@@ -63,35 +53,49 @@ public class SettlementApi {
 		return "home/settled";
 	}
 
-	@PostMapping("/add")
+	@RequestMapping("/add")
 	public String add(Model model,
 		@ModelAttribute("stl")  Settlement stl,
 		@ModelAttribute("type") Text typeId)
 	{
-		var id   = Long.parseLong(typeId.getValue());
-		var type = stlTypeRep.findById(id).get();
+		if (stl.getAmount() != null && !typeId.getValue().isEmpty()) {
+			var id   = Long.parseLong(typeId.getValue());
+			var type = stlTypeRep.findById(id).get();
 
-		var currentR = facade.currentResident();
-		stl.setType(type);
-		stl.setResident(currentR);
+			var currentR = facade.currentResident();
+			stl.setType(type);
+			stl.setResident(currentR);
 
-		var added = stlRep.save(stl);
+			var added = stlRep.save(stl);
 
-		var residents   = resRep.findAll();
-		var perResident = added.getAmount().divide(
-			new BigDecimal(resRep.count())
-		);
+			var residents   = resRep.findAll();
+			var perResident = added.getAmount().divide(
+				new BigDecimal(resRep.count()),
+				2, RoundingMode.CEILING
+			);
 
-		var payments = new ArrayList<Payment>();
-		residents.forEach(r -> {
-			if (r.getId() != currentR.getId())
-			{
-				payments.add(new Payment(r, added, perResident));
-			}
+			var payments = new ArrayList<Payment>();
+			residents.forEach(r -> {
+				if (r.getId() != currentR.getId())
+				{
+					payments.add(new Payment(r, added, perResident));
+				}
+			});
+
+			payRep.saveAll(payments);
+
+			model.addAttribute("message", "Poprawnie dodano wydatek.");
+		}
+
+		var allowed = new ArrayList<StlType>();
+		facade.currentResident().getRoles().forEach((r)-> {
+			allowed.addAll(r.getStltypes());
 		});
 
-		payRep.saveAll(payments);
+		model.addAttribute("stlTypes", allowed);
+		model.addAttribute("stl",      new Settlement());
+		model.addAttribute("typeId",   new Text());
 
-		return all(model);
+		return "home/add-settlement";
 	}
 }
