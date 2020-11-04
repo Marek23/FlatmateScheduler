@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen" th:href="@{../css/bootstrap.min.css}"/>
-    <link href="../css/task/task.css"     rel="stylesheet" media="screen" th:href="@{../css/task/task.css}" />
-</head>
+<head></head>
 <body>
-    <!--/*  Multiple fragments may be defined in one file */-->
     <div th:fragment="settlements" th:align="center">
         <table class="table table-bordered table-striped">
             <thead>
@@ -31,9 +27,8 @@
                 <td th:text="${stl.date}"></td>
 
                 <td th:id="@{td-} + ${stl.id}">
-                    <span
-                        class="glyphicon glyphicon-chevron-down"
-                        onclick="showPayments(this)" th:id="${stl.id}">
+                    <span class="fas-stack fa-lg" onclick="showPayments(this)" th:id="${stl.id}">
+                        <i class="fas fa-arrow-down"></i>
                     </span>
                 </td>
             </tr>
@@ -90,7 +85,6 @@
                 <td>Kwota</td>
                 <td>Status</td>
                 <td>Dzień opłaty</td>
-                <td>Akcja</td>
             </tr>
             </thead>
             <tbody>
@@ -102,13 +96,6 @@
                 <td th:text="${p.amount}"></td>
                 <td th:text="${p.status}"></td>
                 <td th:text="${p.date}"></td>
-                <td th:switch="${p.status.name()}">
-                    <span th:case="Nierozliczona"
-                        class="glyphicon glyphicon glyphicon-ok"
-                        onclick="pay(this)" th:id="${p.id.settlementId}">
-                    </span>
-                    <span th:case="*"></span>
-                </td>
             </tr>
             </tbody>
         </table>
@@ -121,16 +108,27 @@
                 <td>Numer wydatku</td>
                 <td>Kwota</td>
                 <td>Status</td>
+                <td></td>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${toPay.empty}">
-                <td colspan="4">Brak opłaconych wydatków</td>
+                <td colspan="4">Wszystkie opłaty rozliczone</td>
             </tr>
-            <tr th:each="p : ${toPay}">
+            <tr th:each="p : ${toPay}" th:id="'tr-' + ${p.id.residentId} + '-' + ${p.id.settlementId}">
                 <td th:text="${p.id.settlementId}"></td>
                 <td th:text="${p.amount}"></td>
                 <td th:text="${p.status}"></td>
+                <td th:id="'td-' + ${p.id.residentId} + '-' + ${p.id.settlementId}" th:switch="${p.status.name()}">
+                    <span 
+                        th:case="Nierozliczona"
+                        class="fas-stack fa-lg"
+                        onclick="pay(this)"
+                        th:id="${p.id.residentId} + '-' + ${p.id.settlementId}">
+                        <i class="fas fa-money-bill-wave"></i>
+                    </span>
+                    <span th:case="*"></span>
+                </td>
             </tr>
             </tbody>
         </table>

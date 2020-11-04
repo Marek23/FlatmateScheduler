@@ -62,9 +62,8 @@ function showPayments(span) {
             var json = req.response;
             addPayments(json, id);
         }
-
         $("span#" + id).replaceWith(
-            '<span class="glyphicon glyphicon glyphicon-chevron-up" onclick="hidePayments(this)" id="' + id + '"></span>'
+            '<span class="fas-stack fa-lg" onclick="hidePayments(this)" id="' + id + '"><i class="fas fa-arrow-up"></i></span>'
         );
     }
 }
@@ -73,36 +72,29 @@ function hidePayments(span) {
     var id = $(span).attr("id");
 
     $("span#" + id).replaceWith(
-        '<span class="glyphicon glyphicon-chevron-down" onclick="showPayments(this)" id="' + id + '"></span>'
+        '<span class="fas-stack fa-lg" onclick="showPayments(this)" id="' + id + '"><i class="fas fa-arrow-down"></i></span>'
     );
 
     $("tr#"+ "payments-" + id).remove();
 }
 
 function pay(span) {
-    var id = $(span).attr("id");
+    var cId   = $(span).attr("id").split("-");
+    var resId = cId[0];
+    var stlId = cId[1];
 
     var req = new XMLHttpRequest();
 
     req.responseType = 'json';
-    req.open("GET", "/payments/pay/" + id);
+    req.open("GET", "/payments/pay/" + resId + "/" + stlId);
     req.send();
 
     req.onreadystatechange = (e) => {
         if (req.readyState == 4 && req.status == 200)
         {
             var p    = req.response;
-            var trId = p.id.residentId + "-" + p.id.settlementId;
-
-            $("tr#" + trId).replaceWith(
-                "<tr id=" + trId + ">" +
-                "<td>" + p.id.settlementId + "</td>" +
-                "<td>" + p.amount + "</td>" +
-                "<td>" + p.status + "</td>" +
-                "<td>" + p.date   + "</td>" +
-                "<td></td>" +
-                "</tr>"
-            );
+            var trId = "tr-" + p.id.residentId + "-" + p.id.settlementId;
+            $("tr#" + trId).remove();
         }
     }
 }
