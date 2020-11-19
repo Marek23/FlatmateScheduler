@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.PaymentId;
+import pl.com.flat.model.PaymentProjection;
 import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
@@ -69,6 +70,15 @@ public class PaymentApi {
 			p.setResident(resRep.findById(p.getId().getResidentId()).get());
 		});
 		return payments;
+	}
+
+	@ResponseBody
+	@GetMapping(
+		value    ="/projections",
+		produces = "application/json; charset=UTF-8"
+	)
+	public Collection<PaymentProjection> paysProjections() {
+		return payRep.findAllProjectedBy();
 	}
 
 	@ResponseBody
