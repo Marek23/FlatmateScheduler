@@ -1,41 +1,74 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head></head>
 <body>
-    <div th:fragment="settlements" th:align="center">
+
+    <div th:fragment="none">
+        <div class="card">
+        <div class="card-header">
+            Motto
+        </div>
+        <div class="card-body">
+            <p class="card-text"> Kochajmy się jak bracia, liczmy jak Żydzi</p>
+            <a href="https://www.youtube.com/watch?v=-52MWBzal2c" class="btn btn-primary">Wyświetl</a>
+        </div>
+        </div>
+    </div>
+
+    <div th:fragment="settlements-all" th:align="center">
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Kto stworzył</th>
-                <th scope="col">Ile</th>
-                <th scope="col">Co</th>
+                <th scope="col">Kto wprowadził</th>
+                <th scope="col">Pełna kwota</th>
+                <th scope="col">Za</th>
                 <th scope="col">Kiedy</th>
-                <th scope="col">Pokaż opłaty </th>
+                <th scope="col">Rozwiń</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${settlements.empty}">
                 <td colspan="4">Brak rozliczeń</td>
             </tr>
-            <tr th:each="stl : ${settlements}" th:id="@{tr-} + ${stl.id}">
-                <th scope="row" th:text="${stl.id}"></th>
-                <td th:text="${stl.resident.email}"></td>
-                <td th:text="${stl.amount}"></td>
-                <td th:text="${stl.type.name}"></td>
-                <td th:text="${stl.date}"></td>
-
-                <td th:id="@{td-} + ${stl.id}">
-                    <span class="fas-stack fa-lg" onclick="showPayments(this)" th:id="${stl.id}">
-                        <i class="fas fa-arrow-down"></i>
-                    </span>
-                </td>
-            </tr>
+            <th:block th:each="s : ${settlements}">
+                <tr>
+                    <th scope="row" th:text="${s.id}"></th>
+                    <td th:text="${s.resident.email}"></td>
+                    <td th:text="${s.amount}"></td>
+                    <td th:text="${s.type.name}"></td>
+                    <td th:text="${s.date}"></td>
+                    <td>
+                        <span class="fas-stack fa-lg" onclick="toggleSettlementPayments(this)" th:id="${s.id}">
+                            <i class="fas fa-arrow-down"></i>
+                        </span>
+                    </td>
+                </tr>
+                <tr style = "display: none;" th:id="@{p-} + ${s.id}"><td colspan="6" >
+                    <table class="table table-sm table-bordered">
+                    <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Lokator</th>
+                        <th scope="col">Składka</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Data opłaty</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${s.payments}">
+                            <td th:text="${p.resident.email}"></td>
+                            <td th:text="${p.amount}"></td>
+                            <td th:text="${p.status}"></td>
+                            <td th:text="${p.date}"></td>
+                        </tr>
+                    </tbody>
+                    </table>
+                </td></tr>
+            </th:block>
             </tbody>
         </table>
     </div>
 
-    <div th:fragment="settled" th:align="center">
+    <div th:fragment="settlements-payed" th:align="center">
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
@@ -47,21 +80,56 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${settled.empty}">
+            <tr th:if="${payed.empty}">
                 <td colspan="4">Brak rozliczonych</td>
             </tr>
-            <tr th:each="stl : ${settled}">
-                <td th:text="${stl.id}"></td>
-                <td th:text="${stl.resident.email}"></td>
-                <td th:text="${stl.amount}"></td>
-                <td th:text="${stl.type.name}"></td>
-                <td th:text="${stl.date}"></td>
+            <tr th:each="p : ${payed}">
+                <td th:text="${p.id}"></td>
+                <td th:text="${p.resident.email}"></td>
+                <td th:text="${p.amount}"></td>
+                <td th:text="${p.type.name}"></td>
+                <td th:text="${p.date}"></td>
             </tr>
             </tbody>
         </table>
     </div>
 
-    <div th:fragment="payments" th:align="center">
+    <div th:fragment="settlements-add">
+        <form class="needs-validation" action="#" th:action="@{add}" th:object="${s}" method="post">
+            <div class="form-row">
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom01">Typ rozliczenia</label>
+                <select class="custom-select"
+                    id="validationCustom01" required
+                    th:field="${s.type}"
+                >
+                  <option selected disabled value="">Wybierz...</option>
+                  <option th:each="t : ${types}" th:value="${t.id}" th:utext="${t.name}"/>
+                </select>
+                <div class="invalid-feedback">
+                  Wybierz typ rozliczenia
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom02">Data powstania rozliczenia</label>
+                <input th:field="${s.date}" type="date" class="form-control" id="validationCustom02" required>
+                <div class="invalid-feedback">
+                  Wprowadź datę
+                </div>
+              </div>
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom03">Cała kwota rozliczenia</label>
+                <input th:field="${s.amount}" type="number" class="form-control" min="0.00" max="1000.00" step="0.01" required/>
+                <div class="invalid-feedback">
+                  Wprowadź kwotę
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Dodaj</button>
+        </form>
+    </div>
+
+    <div th:fragment="payments-all" th:align="center">
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
@@ -85,7 +153,7 @@
         </table>
     </div>
 
-    <div th:fragment="to-pay" th:align="center">
+    <div th:fragment="payments-to-pay" th:align="center">
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
@@ -117,75 +185,75 @@
             </tbody>
         </table>
     </div>
-
-    <div th:fragment="to-pay-settlements" th:align="center">
+   
+    <div th:fragment="tasks" th:align="center">
         <table class="table table-hover table-bordered">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Kto stworzył</th>
-                <th scope="col">Ile</th>
-                <th scope="col">Za co</th>
+                <th scope="col">Kto wprowadził</th>
+                <th scope="col">Kto wykonuje</th>
                 <th scope="col">Kiedy</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:if="${settlements.empty}">
-                <td colspan="4">Brak rozliczeń</td>
+            <tr th:if="${tasks.empty}">
+                <td colspan="4">Brak zadań</td>
             </tr>
-            <tr th:each="s : ${settlements}" th:id="@{tr-} + ${stl.id}">
-                <th scope="row" th:text="${stl.id}"></th>
-                <td th:text="${s.resident.email}"></td>
-                <td th:text="${s.amount}"></td>
-                <td th:text="${s.type.name}"></td>
-                <td th:text="${s.date}"></td>
-
-                <td th:id="@{td-} + ${stl.id}" colspan="5">
-                    <table class="table table-hover table-bordered">
-                        <thead class="thead-light">
-                    <span class="fas-stack fa-lg" onclick="showPayments(this)" th:id="${stl.id}">
-                        <i class="fas fa-arrow-down"></i>
-                    </span>
-                </td>
-            </tr>
+            <th:block th:each="t : ${tasks}">
+                <tr>
+                    <th scope="row" th:text="${t.id}"></th>
+                    <td th:text="${t.creator.email}"></td>
+                    <td th:text="${t.resident.email}"></td>
+                    <td th:text="${t.type.name}"></td>
+                    <td th:text="${t.date}"></td>
+                </tr>
+            </th:block>
             </tbody>
         </table>
     </div>
-    
-    <div th:fragment="add-settlement">
-        <form class="needs-validation" action="#" th:action="@{add}" th:object="${stl}" method="post">
+
+    <div th:fragment="tasks-add">
+        <form class="needs-validation" action="#" th:action="@{add}" th:object="${t}" method="post">
             <div class="form-row">
               <div class="col-md-3 mb-3">
-                <label for="validationCustom01">Typ rozliczenia</label>
+                <label for="validationCustom05">Typ zadania</label>
                 <select class="custom-select"
-                    id="validationCustom01" required
-                    th:field="${typeId.value}"
+                    id="validationCustom05" required
+                    th:field="${t.type}"
                 >
                   <option selected disabled value="">Wybierz...</option>
-                  <option th:each="type : ${stlTypes}" th:value="${type.id}" th:utext="${type.name}"/>
+                  <option th:each="t : ${types}" th:value="${t.id}" th:utext="${t.name}"/>
                 </select>
                 <div class="invalid-feedback">
-                  Wybierz typ rozliczenia
+                  Wybierz typ zadania
                 </div>
               </div>
               <div class="col-md-3 mb-3">
-                <label for="validationCustom02">Data powstania rozliczenia</label>
-                <input th:field="${stl.date}" type="date" class="form-control" id="validationCustom02" required>
+                <label for="validationCustom06">Przypisane do</label>
+                <select class="custom-select"
+                    id="validationCustom06" required
+                    th:field="${t.resident}"
+                >
+                  <option selected disabled value="">Wybierz...</option>
+                  <option th:each="r : ${residents}" th:value="${r.id}" th:utext="${r.email}"/>
+                </select>
                 <div class="invalid-feedback">
-                  Wprowadź datę
+                  Przypisz do
                 </div>
               </div>
               <div class="col-md-3 mb-3">
-                <label for="validationCustom03">Cała kwota rozliczenia</label>
-                <input th:field="${stl.amount}" type="number" class="form-control" min="0.00" max="1000.00" step="0.01" required/>
+                <label for="validationCustom07">Data wykonania </label>
+                <input th:field="${t.date}" type="date" class="form-control" id="validationCustom07" required>
                 <div class="invalid-feedback">
-                  Wprowadź kwotę
+                  Wprowadź datę wykonania
                 </div>
               </div>
             </div>
             <button type="submit" class="btn btn-primary">Dodaj</button>
         </form>
     </div>
+
 </body>
 </html>
 

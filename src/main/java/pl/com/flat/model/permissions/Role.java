@@ -1,6 +1,7 @@
 package pl.com.flat.model.permissions;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
@@ -29,14 +30,22 @@ public class Role {
  
 	private String name;
 
-	@ManyToMany(mappedBy = "roles")
-	private Collection<Resident> residents;
+	@ManyToMany(mappedBy="roles")
+	private List<Resident> residents;
 
 	@OneToMany(mappedBy="role")
 	private Collection<StlType> stltypes;
 
+	@OneToMany(mappedBy="role")
+	private Collection<TaskType> taskTypes;
+
 	@JsonManagedReference
 	public Collection<StlType> getStltypes() {
 		return stltypes;
+	}
+
+	@JsonManagedReference
+	public Collection<TaskType> getTaskTypes() {
+		return taskTypes;
 	}
 }

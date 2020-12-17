@@ -48,12 +48,12 @@ public class FlatApplication {
 			rr.save(roomRole);
 			rr.save(webRole);
 
-			var st1 = new StlType("WEBBILL___", "Opłata miesięczna za internet");
-			var st2 = new StlType("SHOPPING__", "Zakupy");
+			var st1 = new StlType("Opłata miesięczna za internet");
+			var st2 = new StlType("Zakupy");
 
-			var tt1 = new TaskType("RUBBISH___", "Wynoszenie śmieci");
-			var tt2 = new TaskType("CLEANBATHR", "Sprzątanie łazienki");
-			var tt3 = new TaskType("CLEANKITCH", "Sprzątanie kuchni");
+			var tt1 = new TaskType("Wynoszenie śmieci");
+			var tt2 = new TaskType("Sprzątanie łazienki");
+			var tt3 = new TaskType("Sprzątanie kuchni");
 
 			st1.setRole(webRole);
 

@@ -3,6 +3,7 @@ package pl.com.flat.model.permissions;
 import java.util.Collection;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Id;
@@ -19,18 +20,17 @@ import pl.com.flat.model.Settlement;
 @Data @Entity
 public class StlType {
 	public StlType() {};
-	public StlType(String type, String name) {
-		this.type = type;
+	public StlType(String name) {
 		this.name = name;
 	}
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
  
-	private String type;
 	private String name;
 
-	@ManyToOne @JoinColumn(name="role_id")
+	@ManyToOne
+	@JoinColumn(name="role_id")
 	private Role role;
 
 	@OneToMany(mappedBy="type")

@@ -19,15 +19,13 @@ import pl.com.flat.model.Task;
 @Data @Entity
 public class TaskType {
 	public TaskType() {};
-	public TaskType(String type, String name) {
-		this.type = type;
+	public TaskType(String name) {
 		this.name = name;
 	}
 
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
  
-	private String type;
 	private String name;
 
 	@ManyToOne @JoinColumn(name="role_id")
@@ -37,7 +35,7 @@ public class TaskType {
 	private Collection<Task> tasks;
 
 	@JsonManagedReference
-	public Collection<Task> getSettlements() {
+	public Collection<Task> getTasks() {
 		return tasks;
 	}
 

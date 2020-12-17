@@ -1,6 +1,7 @@
 package pl.com.flat.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -24,15 +25,8 @@ import pl.com.flat.model.permissions.Role;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Data @Entity
 public class Resident {
-	public Resident() {}
-	public Resident(String email, String password) {
-		this.email    = email;
-		this.password = password;
-	}
-
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
-
+	private Long   id;
 	private String email;
 	private String password;
 
@@ -43,10 +37,23 @@ public class Resident {
 		inverseJoinColumns = @JoinColumn(
 			name = "role_id", referencedColumnName = "id")
 	)
-	private Collection<Role> roles;
+	private List<Role> roles;
 
 	@OneToMany(mappedBy="resident")
 	private Collection<Settlement> settlements;
+
+
+	@OneToMany(mappedBy="resident")
+	private Collection<Task> tasks;
+
+	@OneToMany(mappedBy="creator")
+	private Collection<Task> createdTasks;
+
+	public Resident() {}
+	public Resident(String email, String password) {
+		this.email    = email;
+		this.password = password;
+	}
 
 	public void addRole(Role r) {
 		roles.add(r);
@@ -55,6 +62,16 @@ public class Resident {
 	@JsonManagedReference
 	public Collection<Settlement> getSettlements() {
 		return settlements;
+	}
+
+	@JsonManagedReference
+	public Collection<Task> getTasks() {
+		return tasks;
+	}
+
+	@JsonManagedReference
+	public Collection<Task> getCreatedTasks() {
+		return createdTasks;
 	}
 
 	@JsonIgnore public String getPassword() {

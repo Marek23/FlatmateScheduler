@@ -16,6 +16,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/settlements/all">Wszystkie</a>
+                    <a class="dropdown-item" href="/settlements/payed">Opłacone</a>
                     <div class="dropdown-divider"></div>
                     <a
                       class="dropdown-item"
@@ -32,7 +33,24 @@
                       <a class="dropdown-item" href="/payments/all">Wszystkie</a>
                       <a class="dropdown-item" href="/payments/to-pay">Do zapłaty</a>
                     </div>
-                  </li>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Zadania
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/tasks/all">Wszystkie</a>
+                    <a class="dropdown-item" href="/tasks/done">Wykonane</a>
+                    <a class="dropdown-item" href="/tasks/done">Do zrobienia</a>
+                    <div class="dropdown-divider"></div>
+                    <a
+                      class="dropdown-item"
+                      href="/tasks/add"
+                      sec:authorize="hasRole('ROLE_ROOMOWNER_')"
+                    > Przypisz zadanie </a>
+                  </div>
+                </li>
+
               </ul>
              <ul class="nav navbar-nav navbar-right">
               <li sec:authorize="!isAuthenticated()">

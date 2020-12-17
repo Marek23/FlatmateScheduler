@@ -1,15 +1,22 @@
 package pl.com.flat.model;
 
+import java.util.Date;
+
 import java.math.BigDecimal;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Transient;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import static org.apache.commons.lang3.time.DateFormatUtils.format;
 
 @Data @Entity @NoArgsConstructor
 public class Payment {
@@ -18,29 +25,29 @@ public class Payment {
 	private String date;
 	private BigDecimal amount;
 
-	@Transient private Resident   resident;
-	@Transient private Settlement settlement;
+	@ManyToOne @JoinColumn(name="resident_id", insertable = false, updatable = false)
+	private Resident resident;
+
+	@ManyToOne @JoinColumn(name="settlement_id", insertable = false, updatable = false)
+	private Settlement settlement;
 
 	@Enumerated(EnumType.STRING)
 	private Status status;
 
 	public Payment(Resident r, Settlement s, BigDecimal amount) {
-		this.id     = new PaymentId(r.getId(), s.getId());
-		this.amount = amount;
-		this.status = Status.Nierozliczona;
-		this.date   = "";
-
+		this.id         = new PaymentId(r.getId(), s.getId());
 		this.resident   = r;
 		this.settlement = s;
+		this.amount     = amount;
+		this.status     = Status.Nieopłacona;
+		this.date       = "";
 	}
 
-	public void setPayed(String date) {
+	public void setPayed() {
 		this.status = Status.Opłacona;
-		this.date   = date;
+		this.date   = format(new Date(), "yyyy-MM-dd");
 	}
 
-	public void setConfirmed(String date) {
-		this.status = Status.Potwierdzona;
-		this.date   = date;
-	}
+	@JsonBackReference public Settlement getSettlement(){return settlement;}
+	@JsonBackReference public Resident   getResident()  {return resident;}
 }

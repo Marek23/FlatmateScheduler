@@ -18,12 +18,16 @@ public class Task {
 	private Long id;
 
 	private String date;
+	private Status status;
 
 	@ManyToOne @JoinColumn(name="tasktype_id")
 	private TaskType type;
 
 	@ManyToOne @JoinColumn(name="resident_id")
 	private Resident resident;
+
+	@ManyToOne @JoinColumn(name="creator_id")
+	private Resident creator;
 
 	@JsonBackReference
 	public TaskType getType() {
@@ -33,5 +37,10 @@ public class Task {
 	@JsonBackReference
 	public Resident getResident() {
 		return resident;
+	}
+
+	@JsonBackReference
+	public Resident getCreator() {
+		return creator;
 	}
 }

@@ -5,11 +5,21 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable @Data @NoArgsConstructor
 public class PaymentId implements Serializable{
+	@Column(
+		name = "resident_id",
+		insertable = false,
+		updatable =false)
 	private Long residentId;
+
+	@Column(
+		name = "settlement_id",
+		insertable = false,
+		updatable =false)
 	private Long settlementId;
 
 	public PaymentId(Long r, Long s) {

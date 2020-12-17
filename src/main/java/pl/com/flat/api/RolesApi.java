@@ -10,8 +10,7 @@ import pl.com.flat.security.IFacade;
 
 @RestController
 public class RolesApi {
-	@Autowired
-	IFacade facade;
+	@Autowired IFacade facade;
 
 	@GetMapping("/roles")
 	public Collection<?> roles() {

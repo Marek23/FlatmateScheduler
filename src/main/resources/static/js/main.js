@@ -10,74 +10,20 @@ function getRoles() {
     }
 }
 
-var addPayments = function (response, id) {
-    var $row = $('<tr/>');
-    var $td  = $('<td/>');
-    $td.attr('colspan',6);
-    $row.attr('id', 'payments-' + id);
-    $row.addClass(".bg-info");
-
-    var $table = $('<table/>');
-    var $thead = $('<thead/>');
-    var $tr    = $('<th>Kto</th><th>Ile</th><th>Kiedy</th><th>Status</th>');
-
-    $table.addClass("table table-sm table-bordered");
-    $thead.addClass("thead-light")
-
-    $thead.append($tr);
-    $table.append($thead);
-
-    var $tbody = $('<tbody/>')
-    for(var i=0; i<response.length; i++)
-    {
-        var p = response[i];
-
-        $tr = $('<tr/>');
-        $tr.append( '<td>' + p.resident.email + '</td>' );
-        $tr.append( '<td>' + p.amount         + '</td>' );
-        $tr.append( '<td>' + p.date           + '</td>' );
-        $tr.append( '<td>' + p.status         + '</td>' );
-
-        $tbody.append($tr);
-    }
-
-    $table.append($tbody);
-    $td.append($table);
-
-    $row.append($td);
-
-    $("tr#" + "tr-" + id).after($row);
-}
-
-function showPayments(span) {
+function toggleSettlementPayments(span) {
     var id = $(span).attr("id");
-
-    var req = new XMLHttpRequest();
-
-    req.responseType = 'json';
-    req.open("GET", "/payments/settlement/" + id);
-    req.send();
-
-    req.onreadystatechange = (e) => {
-        if (req.readyState == 4 && req.status == 200)
-        {
-            var json = req.response;
-            addPayments(json, id);
-        }
+    var p = document.getElementById("p-" + id);
+    if (p.style.display === "none") {
+        p.style.display = "";
         $("span#" + id).replaceWith(
-            '<span class="fas-stack fa-lg" onclick="hidePayments(this)" id="' + id + '"><i class="fas fa-arrow-up"></i></span>'
+            '<span class="fas-stack fa-lg" onclick="toggleSettlementPayments(this)" id="' + id + '"><i class="fas fa-arrow-up"></i></span>'
+        );
+    } else {
+        p.style.display = "none";
+        $("span#" + id).replaceWith(
+            '<span class="fas-stack fa-lg" onclick="toggleSettlementPayments(this)" id="' + id + '"><i class="fas fa-arrow-down"></i></span>'
         );
     }
-}
-
-function hidePayments(span) {
-    var id = $(span).attr("id");
-
-    $("span#" + id).replaceWith(
-        '<span class="fas-stack fa-lg" onclick="showPayments(this)" id="' + id + '"><i class="fas fa-arrow-down"></i></span>'
-    );
-
-    $("tr#"+ "payments-" + id).remove();
 }
 
 function pay(span) {

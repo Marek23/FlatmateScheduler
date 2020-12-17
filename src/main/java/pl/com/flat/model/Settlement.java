@@ -7,12 +7,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Transient;
+import javax.persistence.OneToMany;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import lombok.Data;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import pl.com.flat.model.permissions.StlType;
 
@@ -30,7 +31,8 @@ public class Settlement {
 	@ManyToOne @JoinColumn(name="resident_id")
 	private Resident resident;
 
-	@Transient List<Payment> payments;
+	@OneToMany(mappedBy="id.settlementId")
+	List<Payment> payments;
 
 	@JsonBackReference
 	public Resident getResident() {
@@ -41,4 +43,6 @@ public class Settlement {
 	public StlType getType() {
 		return type;
 	}
+
+	@JsonManagedReference public List<Payment> getPayments() {return payments;}
 }

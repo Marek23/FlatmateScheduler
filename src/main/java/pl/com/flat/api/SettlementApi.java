@@ -12,90 +12,71 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.Settlement;
-import pl.com.flat.model.permissions.StlType;
+import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
 import pl.com.flat.repository.SettlementRepository;
 import pl.com.flat.repository.StlTypeRepository;
 import pl.com.flat.security.IFacade;
-import pl.com.flat.util.Text;
+
+import static pl.com.flat.util.Content.content;
 
 @Controller
 @RequestMapping("settlements")
 public class SettlementApi {
-	@Autowired
-	IFacade facade;
-
-	@Autowired
-	ResidentRepository resRep;
-
-	@Autowired
-	SettlementRepository stlRep;
-
-	@Autowired
-	StlTypeRepository stlTypeRep;
-
-	@Autowired
-	PaymentRepository payRep;
+	@Autowired IFacade              facade;
+	@Autowired ResidentRepository   resRep;
+	@Autowired SettlementRepository stlRep;
+	@Autowired StlTypeRepository    typesRep;
+	@Autowired PaymentRepository    payRep;
 
 	@RequestMapping("/all")
 	public String all(Model model) {
 		model.addAttribute("settlements", stlRep.findAll());
 
-		return "home/all-settlements";
+		return content(model, "settlements-all");
 	}
 
-	@RequestMapping("/settled")
+	@RequestMapping("/payed")
 	public String settled(Model model) {
 		var current = facade.currentResident().getId();
-		model.addAttribute("settled", stlRep.findPaidSettlementsForResidentId(current));
+		model.addAttribute("payed", stlRep.findByPaymentsIdResidentIdAndPaymentsStatus(current, Status.Opłacona));
 
-		return "home/settled";
+		return content(model, "settlements-payed");
 	}
 
 	@RequestMapping("/add")
-	public String add(Model model,
-		@ModelAttribute("stl")  Settlement stl,
-		@ModelAttribute("type") Text typeId)
+	public String addSettlement(Model model, @ModelAttribute("s") Settlement s)
 	{
-		if (stl.getAmount() != null && !typeId.getValue().isEmpty()) {
-			var id   = Long.parseLong(typeId.getValue());
-			var type = stlTypeRep.findById(id).get();
+		var logged       = facade.currentResident();
+		var loggedId     = logged.getId();
+		var allowedTypes = typesRep.findByRoleIn(logged.getRoles());
 
-			var currentR = facade.currentResident();
-			stl.setType(type);
-			stl.setResident(currentR);
+		model.addAttribute("types", allowedTypes);
+		model.addAttribute("s",     new Settlement());
 
-			var added = stlRep.save(stl);
+		if (s.getAmount() == null || s.getType() == null)
+			return content(model, "settlements-add");
 
-			var residents   = resRep.findAll();
-			var perResident = added.getAmount().divide(
-				new BigDecimal(resRep.count()),
-				2, RoundingMode.CEILING
-			);
+		s.setResident(logged);
 
-			var payments = new ArrayList<Payment>();
-			residents.forEach(r -> {
-				if (r.getId() != currentR.getId())
-				{
-					payments.add(new Payment(r, added, perResident));
-				}
-			});
-
-			payRep.saveAll(payments);
-
-			model.addAttribute("message", "Poprawnie dodano wydatek.");
-		}
-
-		var allowed = new ArrayList<StlType>();
-		facade.currentResident().getRoles().forEach((r)-> {
-			allowed.addAll(r.getStltypes());
+		var settlement     = stlRep.save(s);
+		var residents      = resRep.findAll();
+		var payments       = new ArrayList<Payment>();
+		var payPerResident = settlement.getAmount().divide(
+			new BigDecimal(resRep.count()),
+			2, RoundingMode.CEILING
+		);
+		residents.forEach(r -> {
+			var p = new Payment(r, settlement, payPerResident);
+			if (r.getId() == loggedId)
+				p.setPayed();
+			payments.add(p);
 		});
 
-		model.addAttribute("stlTypes", allowed);
-		model.addAttribute("stl",      new Settlement());
-		model.addAttribute("typeId",   new Text());
+		payRep.saveAll(payments);
+		model.addAttribute("message", "Poprawnie dodano wydatek.");
 
-		return "home/add-settlement";
+		return content(model, "settlements-add");
 	}
 }

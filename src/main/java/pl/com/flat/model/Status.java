@@ -1,5 +1,5 @@
 package pl.com.flat.model;
 
 public enum Status {
-	Nierozliczona, Opłacona, Potwierdzona
+	Nieopłacona, Opłacona, Wykonane, Czeka
 }
