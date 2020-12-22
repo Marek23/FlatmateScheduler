@@ -23,6 +23,7 @@ public class Settlement {
 	private Long id;
 
 	private String date;
+	private String description;
 	private BigDecimal amount;
 
 	@ManyToOne @JoinColumn(name="stltype_id")

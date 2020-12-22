@@ -42,6 +42,8 @@ public class Resident {
 	@OneToMany(mappedBy="resident")
 	private Collection<Settlement> settlements;
 
+	@OneToMany(mappedBy="resident")
+	private Collection<Rubbish> rubbishs;
 
 	@OneToMany(mappedBy="resident")
 	private Collection<Task> tasks;
@@ -67,6 +69,11 @@ public class Resident {
 	@JsonManagedReference
 	public Collection<Task> getTasks() {
 		return tasks;
+	}
+
+	@JsonManagedReference
+	public Collection<Rubbish> getRubbishs() {
+		return rubbishs;
 	}
 
 	@JsonManagedReference

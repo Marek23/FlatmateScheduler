@@ -51,21 +51,18 @@ public class FlatApplication {
 			var st1 = new StlType("Opłata miesięczna za internet");
 			var st2 = new StlType("Zakupy");
 
-			var tt1 = new TaskType("Wynoszenie śmieci");
 			var tt2 = new TaskType("Sprzątanie łazienki");
 			var tt3 = new TaskType("Sprzątanie kuchni");
 
 			st1.setRole(webRole);
 
 			st2.setRole(roomRole);
-			tt1.setRole(roomRole);
 			tt2.setRole(roomRole);
 			tt3.setRole(roomRole);
 
 			str.save(st1);
 			str.save(st2);
 
-			ttr.save(tt1);
 			ttr.save(tt2);
 			ttr.save(tt3);
 

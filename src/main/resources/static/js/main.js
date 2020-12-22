@@ -25,24 +25,3 @@ function toggleSettlementPayments(span) {
         );
     }
 }
-
-function pay(span) {
-    var cId   = $(span).attr("id").split("-");
-    var resId = cId[0];
-    var stlId = cId[1];
-
-    var req = new XMLHttpRequest();
-
-    req.responseType = 'json';
-    req.open("GET", "/payments/pay/" + resId + "/" + stlId);
-    req.send();
-
-    req.onreadystatechange = (e) => {
-        if (req.readyState == 4 && req.status == 200)
-        {
-            var p    = req.response;
-            var trId = "tr-" + p.id.residentId + "-" + p.id.settlementId;
-            $("tr#" + trId).remove();
-        }
-    }
-}

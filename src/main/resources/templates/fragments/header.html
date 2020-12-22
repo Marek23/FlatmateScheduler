@@ -1,6 +1,5 @@
 <!doctype html>
 <html xmlns:th="http://www.thymeleaf.org">
-  <head></head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark" th:fragment="header">
             <a class="navbar-brand" href="/">NASZ ADRES</a>
@@ -16,7 +15,6 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/settlements/all">Wszystkie</a>
-                    <a class="dropdown-item" href="/settlements/payed">Opłacone</a>
                     <div class="dropdown-divider"></div>
                     <a
                       class="dropdown-item"
@@ -26,22 +24,21 @@
                   </div>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                       Moje opłaty
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                       <a class="dropdown-item" href="/payments/all">Wszystkie</a>
-                      <a class="dropdown-item" href="/payments/to-pay">Do zapłaty</a>
+                      <a class="dropdown-item" href="/payments/to-pay">Moje do zapłaty</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Zadania
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/tasks/all">Wszystkie</a>
-                    <a class="dropdown-item" href="/tasks/done">Wykonane</a>
-                    <a class="dropdown-item" href="/tasks/done">Do zrobienia</a>
+                    <a class="dropdown-item" href="/tasks/todo">Moje do zrobienia</a>
                     <div class="dropdown-divider"></div>
                     <a
                       class="dropdown-item"
@@ -50,12 +47,26 @@
                     > Przypisz zadanie </a>
                   </div>
                 </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Śmieci
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="/rubbishs/all">Wszystkie</a>
+                    <div class="dropdown-divider"></div>
+                    <a
+                      class="dropdown-item"
+                      href="/rubbishs/add"
+                      sec:authorize="hasRole('ROLE_ROOMOWNER_')"
+                    > Dodaj wpis </a>
+                  </div>
+                </li>
 
               </ul>
              <ul class="nav navbar-nav navbar-right">
               <li sec:authorize="!isAuthenticated()">
                 <a href="/logout">
-                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Logout
+                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Wyloguj
                 </a>
                 <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
               </li>

@@ -15,7 +15,7 @@
     </div>
 
     <div th:fragment="settlements-all" th:align="center">
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
@@ -23,12 +23,14 @@
                 <th scope="col">Pełna kwota</th>
                 <th scope="col">Za</th>
                 <th scope="col">Kiedy</th>
+                <th scope="col">Opis</th>
                 <th scope="col">Rozwiń</th>
             </tr>
             </thead>
             <tbody>
+
             <tr th:if="${settlements.empty}">
-                <td colspan="4">Brak rozliczeń</td>
+                <td colspan="7">Brak rozliczeń</td>
             </tr>
             <th:block th:each="s : ${settlements}">
                 <tr>
@@ -37,13 +39,14 @@
                     <td th:text="${s.amount}"></td>
                     <td th:text="${s.type.name}"></td>
                     <td th:text="${s.date}"></td>
+                    <td th:text="${s.description}"></td>
                     <td>
                         <span class="fas-stack fa-lg" onclick="toggleSettlementPayments(this)" th:id="${s.id}">
                             <i class="fas fa-arrow-down"></i>
                         </span>
                     </td>
                 </tr>
-                <tr style = "display: none;" th:id="@{p-} + ${s.id}"><td colspan="6" >
+                <tr style = "display: none;" th:id="@{p-} + ${s.id}"><td colspan="7" >
                     <table class="table table-sm table-bordered">
                     <thead class="thead-light">
                     <tr>
@@ -69,26 +72,28 @@
     </div>
 
     <div th:fragment="settlements-payed" th:align="center">
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
             <thead class="thead-light">
             <tr>
-                <th>ID</th>
+                <th>#</th>
                 <th>Kto</th>
                 <th>Ile</th>
                 <th>Co</th>
                 <th>Kiedy</th>
+                <th>Opis</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${payed.empty}">
-                <td colspan="4">Brak rozliczonych</td>
+                <td colspan="6">Brak rozliczonych</td>
             </tr>
-            <tr th:each="p : ${payed}">
-                <td th:text="${p.id}"></td>
-                <td th:text="${p.resident.email}"></td>
-                <td th:text="${p.amount}"></td>
-                <td th:text="${p.type.name}"></td>
-                <td th:text="${p.date}"></td>
+            <tr th:each="s : ${payed}">
+                <th scope="row" th:text="${s.id}"></th>
+                <td th:text="${s.resident.email}"></td>
+                <td th:text="${s.amount}"></td>
+                <td th:text="${s.type.name}"></td>
+                <td th:text="${s.date}"></td>
+                <td th:text="${s.description}"></td>
             </tr>
             </tbody>
         </table>
@@ -124,16 +129,20 @@
                   Wprowadź kwotę
                 </div>
               </div>
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom03">Opis</label>
+                <textarea th:field="${s.description}" class="form-control" rows="1"></textarea>
+              </div>
             </div>
             <button type="submit" class="btn btn-primary">Dodaj</button>
         </form>
     </div>
 
     <div th:fragment="payments-all" th:align="center">
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
             <thead class="thead-light">
             <tr>
-                <th>Numer wydatku</th>
+                <th>#</th>
                 <th>Kwota</th>
                 <th>Status</th>
                 <th>Dzień opłaty</th>
@@ -144,7 +153,7 @@
                 <td colspan="4">Brak opłaconych wydatków</td>
             </tr>
             <tr th:each="p : ${payments}" th:id="${p.id.residentId} + '-' + ${p.id.settlementId}">
-                <td th:text="${p.id.settlementId}"></td>
+                <th scope="row" th:text="${p.id.settlementId}"></th>
                 <td th:text="${p.amount}"></td>
                 <td th:text="${p.status}"></td>
                 <td th:text="${p.date}"></td>
@@ -154,13 +163,13 @@
     </div>
 
     <div th:fragment="payments-to-pay" th:align="center">
-        <table class="table table-hover table-bordered">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
             <thead class="thead-light">
             <tr>
-                <th>Numer wydatku</th>
+                <th>#</th>
                 <th>Kwota</th>
                 <th>Status</th>
-                <th></th>
+                <th>Rozlicz</th>
             </tr>
             </thead>
             <tbody>
@@ -168,17 +177,15 @@
                 <td colspan="4">Wszystkie opłaty rozliczone</td>
             </tr>
             <tr th:each="p : ${toPay}" th:id="'tr-' + ${p.id.residentId} + '-' + ${p.id.settlementId}">
-                <td th:text="${p.id.settlementId}"></td>
-                <td th:text="${p.amount}"></td>
-                <td th:text="${p.status}"></td>
-                <td th:id="'td-' + ${p.id.residentId} + '-' + ${p.id.settlementId}" th:switch="${p.status.name()}">
-                    <span 
-                        th:case="Nierozliczona"
-                        class="fas-stack fa-lg"
-                        onclick="pay(this)"
-                        th:id="${p.id.residentId} + '-' + ${p.id.settlementId}">
-                        <i class="fas fa-money-bill-wave"></i>
-                    </span>
+                <td th:text   = "${p.id.settlementId}"></td>
+                <td th:text   = "${p.amount}"></td>
+                <td th:text   = "${p.status}"></td>
+                <td th:switch = "${p.status.name()}">
+                <form th:case = "Nieopłacona" th:action="@{pay}" th:object="${id}" method="post">
+                    <input type="hidden" th:value="${p.id.residentId}"   id="residentId" name="residentId">
+                    <input type="hidden" th:value="${p.id.settlementId}" id="settlementId" name="settlementId">
+                    <button type="submit" class="btn btn-success">Oznacz zapłacone</button>
+                </form>
                     <span th:case="*"></span>
                 </td>
             </tr>
@@ -186,19 +193,21 @@
         </table>
     </div>
    
-    <div th:fragment="tasks" th:align="center">
-        <table class="table table-hover table-bordered">
+    <div th:fragment="tasks-all" th:align="center">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Kto wprowadził</th>
                 <th scope="col">Kto wykonuje</th>
+                <th scope="col">Co</th>
                 <th scope="col">Kiedy</th>
+                <th scope="col">Status</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${tasks.empty}">
-                <td colspan="4">Brak zadań</td>
+                <td colspan="6">Brak zadań</td>
             </tr>
             <th:block th:each="t : ${tasks}">
                 <tr>
@@ -207,6 +216,43 @@
                     <td th:text="${t.resident.email}"></td>
                     <td th:text="${t.type.name}"></td>
                     <td th:text="${t.date}"></td>
+                    <td th:text="${t.status}"></td>
+                </tr>
+            </th:block>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="tasks-todo" th:align="center">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+            <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Kto wprowadził</th>
+                <th scope="col">Co</th>
+                <th scope="col">Kiedy</th>
+                <th scope="col">Status</th>
+                <th scope="col">Akcja</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${tasks.empty}">
+                <td colspan="6">Brak zadań</td>
+            </tr>
+            <th:block th:each="t : ${tasks}">
+                <tr>
+                    <th scope="row" th:text="${t.id}"></th>
+                    <td th:text="${t.creator.email}"></td>
+                    <td th:text="${t.type.name}"></td>
+                    <td th:text="${t.date}"></td>
+                    <td th:text="${t.status}"></td>
+                    <td th:switch = "${t.status.name()}">
+                    <form th:action="@{do}"  method="post">
+                        <input type="hidden" th:value="${t.id}" name="id"/>
+                        <button type="submit" class="btn btn-success">Oznacz wykonane</button>
+                    </form>
+                        <span th:case="*"></span>
+                    </td>
                 </tr>
             </th:block>
             </tbody>
@@ -254,6 +300,42 @@
         </form>
     </div>
 
+    <div th:fragment="rubbishs-all" th:align="center">
+        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+            <thead class="thead-light">
+            <tr>
+                <th>#</th>
+                <th>Kto</th>
+                <th>Kiedy</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${rubbishs.empty}">
+                <td colspan="3">Brak</td>
+            </tr>
+            <tr th:each="r : ${rubbishs}">
+                <th scope="row" th:text="${r.id}"></th>
+                <td th:text="${r.resident.email}"></td>
+                <td th:text="${r.date}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:fragment="rubbishs-add">
+        <form class="needs-validation" action="#" th:action="@{add}" th:object="${r}" method="post">
+            <div class="form-row">
+              <div class="col-md-3 mb-3">
+                <label for="validationCustom10">Kiedy</label>
+                <input th:field="${r.date}" type="date" class="form-control" id="validationCustom10" required>
+                <div class="invalid-feedback">
+                  Wprowadź datę
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Dodaj wpis</button>
+        </form>
+    </div>
 </body>
 </html>
 

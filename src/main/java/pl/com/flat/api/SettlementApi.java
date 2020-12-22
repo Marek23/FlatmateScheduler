@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.Settlement;
-import pl.com.flat.model.Status;
 import pl.com.flat.repository.PaymentRepository;
 import pl.com.flat.repository.ResidentRepository;
 import pl.com.flat.repository.SettlementRepository;
@@ -20,6 +19,7 @@ import pl.com.flat.repository.StlTypeRepository;
 import pl.com.flat.security.IFacade;
 
 import static pl.com.flat.util.Content.content;
+import static pl.com.flat.util.Message.alertSuccess;
 
 @Controller
 @RequestMapping("settlements")
@@ -35,14 +35,6 @@ public class SettlementApi {
 		model.addAttribute("settlements", stlRep.findAll());
 
 		return content(model, "settlements-all");
-	}
-
-	@RequestMapping("/payed")
-	public String settled(Model model) {
-		var current = facade.currentResident().getId();
-		model.addAttribute("payed", stlRep.findByPaymentsIdResidentIdAndPaymentsStatus(current, Status.Opłacona));
-
-		return content(model, "settlements-payed");
 	}
 
 	@RequestMapping("/add")
@@ -75,7 +67,8 @@ public class SettlementApi {
 		});
 
 		payRep.saveAll(payments);
-		model.addAttribute("message", "Poprawnie dodano wydatek.");
+
+		alertSuccess(model, "Poprawnie dodano wydatek");
 
 		return content(model, "settlements-add");
 	}
