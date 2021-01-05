@@ -2,17 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 
-    <div th:fragment="none">
-        <div class="card">
-        <div class="card-header">
-            Motto
-        </div>
-        <div class="card-body">
-            <p class="card-text"> Kochajmy się jak bracia, liczmy jak Żydzi</p>
-            <a href="https://www.youtube.com/watch?v=-52MWBzal2c" class="btn btn-primary">Wyświetl</a>
-        </div>
-        </div>
-    </div>
+    <div th:fragment="none"></div>
 
     <div th:fragment="settlements-all" th:align="center">
         <table class="table table-hover table-bordered" style="background-color: oldlace;">
@@ -69,6 +59,18 @@
             </th:block>
             </tbody>
         </table>
+
+        <nav th:if="${settlements.totalPages > 0}" style="display: inline-block;">
+        <ul class="pagination">
+            <li th:each="p : ${pages}"
+                th:class="${p == settlements.number + 1} ? 'page-item active' : page-item">
+                <a th:href="@{/settlements/all(page=${p})}"
+                    th:text="${p}"
+                    class="page-link">
+                </a>
+            </li>
+        </ul>
+        </nav>
     </div>
 
     <div th:fragment="settlements-payed" th:align="center">

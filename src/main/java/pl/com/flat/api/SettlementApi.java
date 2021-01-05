@@ -3,12 +3,17 @@ package pl.com.flat.api;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.Settlement;
@@ -31,8 +36,19 @@ public class SettlementApi {
 	@Autowired PaymentRepository    payRep;
 
 	@RequestMapping("/all")
-	public String all(Model model) {
-		model.addAttribute("settlements", stlRep.findAll());
+	public String all(Model model, @RequestParam("page") Optional<Integer> number) {
+		var page = stlRep.findAll(PageRequest.of(number.orElse(1) - 1, 8));
+
+		var totalPages = page.getTotalPages();
+        if (totalPages > 0) {
+            var numbers = IntStream.rangeClosed(1, totalPages)
+                .boxed()
+				.collect(Collectors.toList());
+
+            model.addAttribute("pages", numbers);
+		}
+
+		model.addAttribute("settlements", page);
 
 		return content(model, "settlements-all");
 	}
