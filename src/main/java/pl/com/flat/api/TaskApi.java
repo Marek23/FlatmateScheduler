@@ -42,7 +42,7 @@ public class TaskApi {
 		var types     = typesRep.findAll();
 		var residents = resRep.findAll();
 
-		String [][] summary = new String[(int)typesRep.count()][(int)resRep.count()];
+		String [][] summary = new String[(int)typesRep.count()+1][(int)resRep.count()+1];
 
 		int i = 1;
 		for (var t : types)

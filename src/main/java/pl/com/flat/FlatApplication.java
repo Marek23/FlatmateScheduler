@@ -8,6 +8,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
+import pl.com.flat.api.EmailApi;
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.Resident;
 import pl.com.flat.model.Settlement;
@@ -31,7 +32,8 @@ public class FlatApplication {
 			StlTypeRepository    str,
 			TaskTypeRepository   ttr,
 			SettlementRepository sr,
-			PaymentRepository    pr) {
+			PaymentRepository    pr,
+			EmailApi             emailApi) {
 		return args -> {
 			System.out.println("START");
 
