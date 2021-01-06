@@ -17,7 +17,9 @@ public class Task {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 
-	private String date;
+	private String execDate;
+	private String creationDate;
+	private String deadlineDate;
 	private Status status;
 
 	@ManyToOne @JoinColumn(name="tasktype_id")

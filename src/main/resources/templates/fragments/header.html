@@ -38,6 +38,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/tasks/all">Wszystkie</a>
+                    <a class="dropdown-item" href="/tasks/summary">Podsumowanie</a>
                     <a class="dropdown-item" href="/tasks/todo">Moje do zrobienia</a>
                     <div class="dropdown-divider"></div>
                     <a
@@ -53,6 +54,7 @@
                   </a>
                   <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="dropdown-item" href="/rubbishs/all">Wszystkie</a>
+                    <a class="dropdown-item" href="/rubbishs/summary">Podsumowanie</a>
                     <div class="dropdown-divider"></div>
                     <a
                       class="dropdown-item"
@@ -61,15 +63,12 @@
                     > Dodaj wpis </a>
                   </div>
                 </li>
-
               </ul>
-             <ul class="nav navbar-nav navbar-right">
-              <li sec:authorize="!isAuthenticated()">
-                <a href="/logout">
-                  <span class="glyphicon glyphicon-log-out" aria-hidden="true"></span>&nbsp;Wyloguj
-                </a>
-                <form style="visibility: hidden" id="form" method="post" action="#" th:action="@{/logout}"></form>
-              </li>
+
+              <ul class="navbar-nav mr-right">
+                <li class="nav-item">
+                  <a class="nav-link" href="/logout">Wyloguj</a>
+                </li>
               </ul>
             </div>
           </nav>

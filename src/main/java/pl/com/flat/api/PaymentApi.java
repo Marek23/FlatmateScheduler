@@ -37,6 +37,7 @@ public class PaymentApi {
 		var payments = payRep.findByResidentId(current);
 
 		model.addAttribute("payments", payments);
+		model.addAttribute("total", payRep.getTotalAmount(facade.currentResident()));
 
 		return content(model, "payments-all");
 	}

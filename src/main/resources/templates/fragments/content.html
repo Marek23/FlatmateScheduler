@@ -5,7 +5,7 @@
     <div th:fragment="none"></div>
 
     <div th:fragment="settlements-all" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
@@ -74,7 +74,7 @@
     </div>
 
     <div th:fragment="settlements-payed" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th>#</th>
@@ -141,13 +141,13 @@
     </div>
 
     <div th:fragment="payments-all" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th>#</th>
-                <th>Kwota</th>
                 <th>Status</th>
                 <th>Dzień opłaty</th>
+                <th>Kwota</th>
             </tr>
             </thead>
             <tbody>
@@ -156,16 +156,27 @@
             </tr>
             <tr th:each="p : ${payments}" th:id="${p.id.residentId} + '-' + ${p.id.settlementId}">
                 <th scope="row" th:text="${p.id.settlementId}"></th>
-                <td th:text="${p.amount}"></td>
                 <td th:text="${p.status}"></td>
                 <td th:text="${p.date}"></td>
+                <td th:text="${p.amount}"></td>
             </tr>
             </tbody>
         </table>
+
+        <div class="row">
+            <div class ="col-md-5"></div>
+            <div class ="col-md-4"></div>
+            <div class ="col-md-3">
+               <div class="card">
+                    <div class="card-body">Suma wszystkich opłat: [[${total}]]</div>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div th:fragment="payments-to-pay" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color:snow;">
             <thead class="thead-light">
             <tr>
                 <th>#</th>
@@ -196,20 +207,22 @@
     </div>
    
     <div th:fragment="tasks-all" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Kto wprowadził</th>
                 <th scope="col">Kto wykonuje</th>
                 <th scope="col">Co</th>
-                <th scope="col">Kiedy</th>
+                <th scope="col">Data utworzenia</th>
+                <th scope="col">Termin</th>
+                <th scope="col">Data wykonania</th>
                 <th scope="col">Status</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${tasks.empty}">
-                <td colspan="6">Brak zadań</td>
+                <td colspan="8">Brak zadań</td>
             </tr>
             <th:block th:each="t : ${tasks}">
                 <tr>
@@ -217,7 +230,9 @@
                     <td th:text="${t.creator.email}"></td>
                     <td th:text="${t.resident.email}"></td>
                     <td th:text="${t.type.name}"></td>
-                    <td th:text="${t.date}"></td>
+                    <td th:text="${t.creationDate}"></td>
+                    <td th:text="${t.deadlineDate}"></td>
+                    <td th:text="${t.execDate}"></td>
                     <td th:text="${t.status}"></td>
                 </tr>
             </th:block>
@@ -225,28 +240,41 @@
         </table>
     </div>
 
+    <div th:fragment="tasks-summary" th:align="center">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
+            <thead class="thead-light"></thead>
+            <tbody>
+                <tr th:each="row: ${summary}">
+                    <td th:each="col: ${row}" type = "text" th:text="${col}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <div th:fragment="tasks-todo" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Kto wprowadził</th>
                 <th scope="col">Co</th>
                 <th scope="col">Kiedy</th>
+                <th scope="col">Termin</th>
                 <th scope="col">Status</th>
                 <th scope="col">Akcja</th>
             </tr>
             </thead>
             <tbody>
             <tr th:if="${tasks.empty}">
-                <td colspan="6">Brak zadań</td>
+                <td colspan="7">Brak zadań</td>
             </tr>
             <th:block th:each="t : ${tasks}">
                 <tr>
                     <th scope="row" th:text="${t.id}"></th>
                     <td th:text="${t.creator.email}"></td>
                     <td th:text="${t.type.name}"></td>
-                    <td th:text="${t.date}"></td>
+                    <td th:text="${t.creationDate}"></td>
+                    <td th:text="${t.deadlineDate}"></td>
                     <td th:text="${t.status}"></td>
                     <td th:switch = "${t.status.name()}">
                     <form th:action="@{do}"  method="post">
@@ -291,8 +319,8 @@
                 </div>
               </div>
               <div class="col-md-3 mb-3">
-                <label for="validationCustom07">Data wykonania </label>
-                <input th:field="${t.date}" type="date" class="form-control" id="validationCustom07" required>
+                <label for="validationCustom07">Termin wykonania</label>
+                <input th:field="${t.deadlineDate}" type="date" class="form-control" id="validationCustom07" required>
                 <div class="invalid-feedback">
                   Wprowadź datę wykonania
                 </div>
@@ -303,7 +331,7 @@
     </div>
 
     <div th:fragment="rubbishs-all" th:align="center">
-        <table class="table table-hover table-bordered" style="background-color: oldlace;">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
             <thead class="thead-light">
             <tr>
                 <th>#</th>
@@ -324,6 +352,25 @@
         </table>
     </div>
 
+    <div th:fragment="rubbishs-summary" th:align="center">
+        <table class="table table-hover table-bordered" style="background-color: snow;">
+            <thead class="thead-light">
+            <tr>
+                <th>Kto</th>
+                <th>Ile razy / Data ostatniego razu</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${summary.empty}">
+                <td colspan="3">Brak</td>
+            </tr>
+            <tr th:each="r : ${summary}">
+                <td th:text="${r.key}"></td>
+                <td th:text="${r.value}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
     <div th:fragment="rubbishs-add">
         <form class="needs-validation" action="#" th:action="@{add}" th:object="${r}" method="post">
             <div class="form-row">

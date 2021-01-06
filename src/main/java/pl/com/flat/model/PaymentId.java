@@ -10,6 +10,8 @@ import javax.persistence.Embeddable;
 
 @Embeddable @Data @NoArgsConstructor
 public class PaymentId implements Serializable{
+	private static final long serialVersionUID = 1L;
+
 	@Column(
 		name = "resident_id",
 		insertable = false,
