@@ -35,8 +35,8 @@ public class FlatApplication {
 		return args -> {
 			System.out.println("START");
 
-			var um = new Resident("marek",   "password");
-			var ua = new Resident("adam", "password");
+			var um = new Resident("marek", "password");
+			var ua = new Resident("adam",  "password");
 			var uk = new Resident("kamil", "password");
 
 			ur.save(um);
@@ -66,13 +66,6 @@ public class FlatApplication {
 			ttr.save(tt2);
 			ttr.save(tt3);
 
-			var s = new Settlement();
-			s.setAmount(new BigDecimal(3f));
-			s.setDate(format(new Date(), "yyyy-MM-dd"));
-			s.setType(st1);
-			s.setResident(um);
-			sr.save(s);
-
 			var updatem = ur.findByEmail("marek");
 			var updatea = ur.findByEmail("adam");
 			var updatek = ur.findByEmail("kamil");
@@ -86,14 +79,6 @@ public class FlatApplication {
 			ur.save(updatem);
 			ur.save(updatea);
 			ur.save(updatek);
-
-			var p = new Payment(
-				ur.findByEmail("marek"),
-				sr.findAll().iterator().next(),
-				new BigDecimal(9)
-			);
-
-			pr.save(p);
 
 			System.out.println("STOP");
 		};
