@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.com.flat.model.Status;
 import pl.com.flat.model.Task;
@@ -21,7 +22,9 @@ import static pl.com.flat.util.Message.alertSuccess;
 import static org.apache.commons.lang3.time.DateFormatUtils.format;
 
 import java.util.Date;
+import java.util.Optional;
 
+import static pl.com.flat.util.PageUtil.createPageContent;
 @Controller
 @RequestMapping("tasks")
 public class TaskApi {
@@ -32,8 +35,10 @@ public class TaskApi {
 	@Autowired EmailService mail;
 
 	@RequestMapping("/all")
-	public String all(Model model) {
-		model.addAttribute("tasks", taskRep.findAll());
+	public String all(Model model, @RequestParam("page") Optional<Integer> number) {
+		var page = createPageContent(model, taskRep, number);
+
+		model.addAttribute("tasks", page);
 
 		return content(model, "tasks-all");
 	}

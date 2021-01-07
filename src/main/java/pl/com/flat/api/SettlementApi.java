@@ -4,11 +4,8 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -25,6 +22,7 @@ import pl.com.flat.security.IFacade;
 
 import static pl.com.flat.util.Content.content;
 import static pl.com.flat.util.Message.alertSuccess;
+import static pl.com.flat.util.PageUtil.createPageContent;
 
 @Controller
 @RequestMapping("settlements")
@@ -39,16 +37,7 @@ public class SettlementApi {
 
 	@RequestMapping("/all")
 	public String all(Model model, @RequestParam("page") Optional<Integer> number) {
-		var page = stlRep.findAll(PageRequest.of(number.orElse(1) - 1, 8));
-
-		var totalPages = page.getTotalPages();
-        if (totalPages > 0) {
-            var numbers = IntStream.rangeClosed(1, totalPages)
-                .boxed()
-				.collect(Collectors.toList());
-
-            model.addAttribute("pages", numbers);
-		}
+		var page = createPageContent(model, stlRep, number);
 
 		model.addAttribute("settlements", page);
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.com.flat.model.Rubbish;
 import pl.com.flat.repository.ResidentRepository;
@@ -15,6 +16,9 @@ import static pl.com.flat.util.Content.content;
 import static pl.com.flat.util.Message.alertSuccess;
 
 import java.util.HashMap;
+import java.util.Optional;
+
+import static pl.com.flat.util.PageUtil.createPageContent;
 
 @Controller
 @RequestMapping("rubbishs")
@@ -25,8 +29,9 @@ public class RubbishApi {
 	@Autowired EmailService mail;
 
 	@RequestMapping("/all")
-	public String all(Model model) {
-		model.addAttribute("rubbishs", rubRep.findAll());
+	public String all(Model model, @RequestParam("page") Optional<Integer> number) {
+		var page = createPageContent(model, rubRep, number);
+		model.addAttribute("rubbishs", page);
 
 		return content(model, "rubbishs-all");
 	}

@@ -163,6 +163,18 @@
             </tbody>
         </table>
 
+        <nav th:if="${payments.totalPages > 0}" style="display: inline-block;">
+        <ul class="pagination">
+            <li th:each="p : ${pages}"
+                th:class="${p == payments.number + 1} ? 'page-item active' : page-item">
+                <a th:href="@{/payments/all(page=${p})}"
+                    th:text="${p}"
+                    class="page-link">
+                </a>
+            </li>
+        </ul>
+        </nav>
+
         <div class="row">
             <div class ="col-md-5"></div>
             <div class ="col-md-4"></div>
@@ -238,6 +250,18 @@
             </th:block>
             </tbody>
         </table>
+
+        <nav th:if="${tasks.totalPages > 0}" style="display: inline-block;">
+        <ul class="pagination">
+            <li th:each="p : ${pages}"
+                th:class="${p == tasks.number + 1} ? 'page-item active' : page-item">
+                <a th:href="@{/tasks/all(page=${p})}"
+                    th:text="${p}"
+                    class="page-link">
+                </a>
+            </li>
+        </ul>
+        </nav>
     </div>
 
     <div th:fragment="tasks-summary" th:align="center">
@@ -350,6 +374,18 @@
             </tr>
             </tbody>
         </table>
+
+        <nav th:if="${rubbishs.totalPages > 0}" style="display: inline-block;">
+        <ul class="pagination">
+            <li th:each="p : ${pages}"
+                th:class="${p == rubbishs.number + 1} ? 'page-item active' : page-item">
+                <a th:href="@{/rubbishs/all(page=${p})}"
+                    th:text="${p}"
+                    class="page-link">
+                </a>
+            </li>
+        </ul>
+        </nav>
     </div>
 
     <div th:fragment="rubbishs-summary" th:align="center">
