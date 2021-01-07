@@ -35,6 +35,8 @@ public class SettlementApi {
 	@Autowired StlTypeRepository    typesRep;
 	@Autowired PaymentRepository    payRep;
 
+	@Autowired EmailService mail;
+
 	@RequestMapping("/all")
 	public String all(Model model, @RequestParam("page") Optional<Integer> number) {
 		var page = stlRep.findAll(PageRequest.of(number.orElse(1) - 1, 8));
@@ -79,6 +81,8 @@ public class SettlementApi {
 			var p = new Payment(r, settlement, payPerResident);
 			if (r.getId() == loggedId)
 				p.setPayed();
+			else
+				mail.notify(r, "settlements-add");
 			payments.add(p);
 		});
 

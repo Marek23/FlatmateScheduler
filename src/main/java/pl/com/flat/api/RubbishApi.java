@@ -22,6 +22,7 @@ public class RubbishApi {
 	@Autowired IFacade            facade;
 	@Autowired RubbishRepository  rubRep;
 	@Autowired ResidentRepository resRep;
+	@Autowired EmailService mail;
 
 	@RequestMapping("/all")
 	public String all(Model model) {
@@ -63,6 +64,11 @@ public class RubbishApi {
 		rubRep.save(r);
 
 		alertSuccess(model, "Poprawnie dodano.");
+
+		resRep.findAll().forEach(res -> {
+			if (res.getId() != logged.getId())
+				mail.notify(res, logged.getEmail() + " wyniósł śmieci.");
+		});
 
 		return content(model, "rubbishs-add");
 	}

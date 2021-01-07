@@ -8,7 +8,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import pl.com.flat.api.EmailApi;
 import pl.com.flat.model.Payment;
 import pl.com.flat.model.Resident;
 import pl.com.flat.model.Settlement;
@@ -32,13 +31,12 @@ public class FlatApplication {
 			StlTypeRepository    str,
 			TaskTypeRepository   ttr,
 			SettlementRepository sr,
-			PaymentRepository    pr,
-			EmailApi             emailApi) {
+			PaymentRepository    pr) {
 		return args -> {
 			System.out.println("START");
 
-			var um = new Resident("marek", "password");
-			var ua = new Resident("adam",  "password");
+			var um = new Resident("marek",   "password");
+			var ua = new Resident("adam", "password");
 			var uk = new Resident("kamil", "password");
 
 			ur.save(um);

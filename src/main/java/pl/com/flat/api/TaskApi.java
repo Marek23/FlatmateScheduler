@@ -29,6 +29,7 @@ public class TaskApi {
 	@Autowired ResidentRepository resRep;
 	@Autowired TaskRepository     taskRep;
 	@Autowired TaskTypeRepository typesRep;
+	@Autowired EmailService mail;
 
 	@RequestMapping("/all")
 	public String all(Model model) {
@@ -88,13 +89,17 @@ public class TaskApi {
 		model.addAttribute("residents", resRep.findAll());
 		model.addAttribute("t",         new Task());
 
-		if (t.getType() == null || t.getResident() == null)
+		var resident = t.getResident();
+
+		if (t.getType() == null || resident == null)
 			return content(model, "tasks-add");
 
 		t.setCreator(logged);
 		t.setCreationDate(format(new Date(), "yyyy-MM-dd"));
 		t.setStatus(Status.Czeka);
 		taskRep.save(t);
+
+		mail.notify(resident, logged.getEmail() + " dodał Ci zadanie do wykonania.");
 
 		alertSuccess(model, "Poprawnie dodano zadanie.");
 

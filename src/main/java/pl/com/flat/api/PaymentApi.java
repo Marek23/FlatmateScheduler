@@ -22,14 +22,10 @@ import static pl.com.flat.util.Content.content;
 @Controller
 @RequestMapping("payments")
 public class PaymentApi {
-	@Autowired
-	IFacade facade;
-
-	@Autowired
-	PaymentRepository payRep;
-
-	@Autowired
-	ResidentRepository resRep;
+	@Autowired IFacade facade;
+	@Autowired PaymentRepository payRep;
+	@Autowired ResidentRepository resRep;
+	@Autowired EmailService mail;
 
 	@RequestMapping("/all")
 	public String all(Model model) {
@@ -64,6 +60,11 @@ public class PaymentApi {
 		var p = payRep.findById(id);
 		p.setPayed();
 		payRep.save(p);
+
+		var owner = p.getSettlement().getResident();
+		var payer = p.getResident();
+
+		mail.notify(owner, payer.getEmail() + " opłacił Twój wydatek: " + id.getSettlementId());
 
 		return "redirect:" + prev;
 	}
